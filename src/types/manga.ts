@@ -4,7 +4,7 @@ export interface Manga {
   author: string
   genre: string
   status: string
-  chapters: number
+  chapters: number | string
   image: string
   description: string
 }
