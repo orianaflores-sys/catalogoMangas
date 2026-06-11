@@ -653,22 +653,6 @@ td {
   margin: 0;
 }
 
-.category-list {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 14px;
-}
-
-.category-item {
-  background: #eee8df;
-  border: 1px solid #d8cec1;
-  color: #3d2b4f;
-  padding: 10px 14px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
 .manga-card {
   display: flex;
   flex-direction: column;
