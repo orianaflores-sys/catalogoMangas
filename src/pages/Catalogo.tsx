@@ -145,6 +145,12 @@ function Catalogo() {
         </p>
       )}
 
+      {!loading && !error && filteredMangas.length > 0 && (
+        <p className="results-count">
+          Resultados encontrados: {filteredMangas.length}
+        </p>
+      )}
+
       <section className="manga-grid">
         {filteredMangas.map(manga => (
           <MangaCard
