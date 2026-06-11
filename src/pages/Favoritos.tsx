@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import MangaCard from '../components/MangaCard'
 import {
@@ -15,6 +16,12 @@ function Favoritos() {
   }, [])
 
   function handleRemove(id: number) {
+    const confirmRemove = window.confirm('¿Deseas quitar este manga de favoritos?')
+
+    if (!confirmRemove) {
+      return
+    }
+
     removeFavoriteManga(id)
     setFavorites(getFavoriteMangas())
   }
@@ -27,37 +34,65 @@ function Favoritos() {
           name="description"
           content="Lista de mangas favoritos guardados por el usuario."
         />
+        <meta
+          property="og:title"
+          content="Favoritos | MangaVerse"
+        />
+        <meta
+          property="og:description"
+          content="Mangas y cómics guardados por el usuario como favoritos."
+        />
       </Helmet>
 
       <section className="page-header">
         <h1>Mis favoritos</h1>
 
         <p>
-          Aquí se muestran los mangas que agregaste a tu lista de favoritos.
+          Aquí puedes revisar los mangas o cómics que agregaste a tu lista
+          para consultarlos después.
         </p>
       </section>
 
       {favorites.length === 0 && (
-        <p className="info-message">
-          Todavía no agregaste mangas a favoritos.
-        </p>
+        <section className="empty-favorites">
+          <h2>No tienes favoritos todavía</h2>
+
+          <p>
+            Explora el catálogo y guarda los títulos que quieras revisar más adelante.
+          </p>
+
+          <Link to="/catalogo">
+            Ir al catálogo
+          </Link>
+        </section>
       )}
 
-      <section className="manga-grid">
-        {favorites.map(manga => (
-          <div key={manga.id}>
-            <MangaCard manga={manga} />
+      {favorites.length > 0 && (
+        <>
+          <p className="results-count">
+            Favoritos guardados: {favorites.length}
+          </p>
 
-            <button
-              type="button"
-              className="remove-button"
-              onClick={() => handleRemove(manga.id)}
-            >
-              Quitar de favoritos
-            </button>
-          </div>
-        ))}
-      </section>
+          <section className="manga-grid">
+            {favorites.map(manga => (
+              <div
+                key={manga.id}
+                className="favorite-item"
+              >
+                <MangaCard manga={manga} />
+
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={() => handleRemove(manga.id)}
+                >
+                  Quitar de favoritos
+                </button>
+              </div>
+            ))}
+          </section>
+        </>
+      )}
     </main>
   )
 }

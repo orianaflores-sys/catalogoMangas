@@ -668,3 +668,174 @@ td {
   margin-top: auto;
   width: fit-content;
 }
+
+.results-count {
+  font-size: 14px;
+  color: #665f57;
+  margin: 12px 0 18px;
+  font-weight: 600;
+}
+
+.empty-favorites {
+  background: #faf7f1;
+  border: 1px solid #d8cec1;
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(73, 54, 40, 0.08);
+}
+
+.empty-favorites h2 {
+  color: #5b2c83;
+  margin-top: 0;
+}
+
+.empty-favorites a {
+  display: inline-block;
+  margin-top: 12px;
+  background: #eee6f4;
+  color: #5b2c83;
+  border: 1px solid #d8c4e8;
+  padding: 9px 15px;
+  border-radius: 6px;
+}
+
+.empty-favorites a:hover {
+  background: #e3d5ef;
+  color: #442061;
+}
+
+.favorite-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-item .manga-card {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .navbar-spaced {
+    justify-content: center;
+  }
+
+  .brand {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links {
+    justify-content: center;
+  }
+
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero-images {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .hero-manga-card img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 650px) {
+  main {
+    width: 94%;
+    padding-top: 18px;
+  }
+
+  .navbar {
+    margin: 10px auto;
+    padding: 12px;
+  }
+
+  .nav-links {
+    gap: 8px;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  .navbar button {
+    font-size: 14px;
+    padding: 7px 10px;
+  }
+
+  .home-hero,
+  .hero,
+  .catalog-hero,
+  .page-header,
+  .catalog-tools,
+  .form-card,
+  .detail-card,
+  .empty-favorites {
+    padding: 20px;
+  }
+
+  .home-hero-images {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-manga-card img {
+    height: 190px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .filter-buttons button {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .manga-image-box {
+    height: 260px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-actions button,
+  .form-actions a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-hero-images {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-manga-card img {
+    height: 160px;
+  }
+
+  .manga-image-box {
+    height: 240px;
+  }
+
+  .navbar {
+    border-radius: 8px;
+  }
+
+  .nav-links {
+    width: 100%;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  .navbar button {
+    width: 100%;
+    text-align: center;
+  }
+}
