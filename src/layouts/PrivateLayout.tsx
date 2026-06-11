@@ -12,22 +12,30 @@ function PrivateLayout() {
 
   return (
     <>
-      <nav className="navbar">
-        <Link to="/catalogo">Catálogo</Link>
-        <Link to="/favoritos">Favoritos</Link>
+      <nav className="navbar navbar-spaced">
+        <Link className="brand" to="/catalogo">MangaVerse</Link>
 
-        {user?.role === 'Administrador' && (
-          <Link to="/gestion-mangas">Gestión de mangas</Link>
-        )}
+        <div className="nav-links">
+          <Link to="/catalogo">Catálogo</Link>
+          <Link to="/favoritos">Favoritos</Link>
 
-        <Link to="/perfil">Perfil</Link>
+          {user?.role === 'Administrador' && (
+            <Link to="/gestion-mangas">Gestión</Link>
+          )}
 
-        <button onClick={handleLogout}>
-          Cerrar sesión
-        </button>
+          <Link to="/perfil">Perfil</Link>
+
+          <button onClick={handleLogout}>
+            Cerrar sesión
+          </button>
+        </div>
       </nav>
 
       <Outlet />
+
+      <footer className="footer">
+        <p>MangaVerse - Usuario: {user?.username}</p>
+      </footer>
     </>
   )
 }

@@ -102,6 +102,18 @@ function Home() {
           </div>
         </div>
       </section>
+      <section className="home-section">
+  <h2>Categorías principales</h2>
+
+  <div className="category-list">
+    <div className="category-item">Acción</div>
+    <div className="category-item">Romance</div>
+    <div className="category-item">Fantasía</div>
+    <div className="category-item">Terror</div>
+    <div className="category-item">Comedia</div>
+    <div className="category-item">Drama</div>
+  </div>
+</section>
 
       <section className="home-section">
         <h2>Algunos títulos destacados</h2>
