@@ -2,21 +2,39 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { login } from '../services/authService'
+import { registerUser } from '../services/authService'
 
-function Login() {
+function Register() {
   const navigate = useNavigate()
 
+  const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setError('')
 
-    if (username.trim() === '' || password.trim() === '') {
+    setError('')
+    setMessage('')
+
+    if (
+      name.trim() === '' ||
+      username.trim() === '' ||
+      password.trim() === ''
+    ) {
       setError('Todos los campos son obligatorios')
+      return
+    }
+
+    if (name.length < 3) {
+      setError('El nombre debe tener mínimo 3 caracteres')
+      return
+    }
+
+    if (username.length < 4) {
+      setError('El usuario debe tener mínimo 4 caracteres')
       return
     }
 
@@ -25,50 +43,43 @@ function Login() {
       return
     }
 
-    const success = login({
-      username,
-      password
-    })
+    const success = registerUser(name, username, password)
 
     if (!success) {
-      setError('Usuario o contraseña incorrectos')
+      setError('El usuario ya existe')
       return
     }
 
-    navigate('/catalogo')
+    setMessage('Usuario registrado correctamente')
+
+    setTimeout(() => {
+      navigate('/login')
+    }, 1000)
   }
 
   return (
     <main>
       <Helmet>
-        <title>Login | MangaVerse</title>
+        <title>Registro | MangaVerse</title>
         <meta
           name="description"
-          content="Inicio de sesión del sistema MangaVerse."
+          content="Registro de nuevos usuarios en MangaVerse."
         />
         <meta
           property="og:title"
-          content="Login | MangaVerse"
+          content="Registro | MangaVerse"
         />
         <meta
           property="og:description"
-          content="Acceso al sistema de catálogo y gestión de mangas y cómics."
+          content="Crea una cuenta para ingresar al catálogo de mangas y cómics."
         />
       </Helmet>
 
       <section className="form-card">
-        <h1>Iniciar sesión</h1>
+        <h1>Crear cuenta</h1>
 
         <p>
-          Ingresa con tu usuario para acceder al catálogo de mangas y cómics.
-        </p>
-
-        <p>
-          Administrador de prueba: admin / admin123
-        </p>
-
-        <p>
-          Usuario de prueba: user / user123
+          Registra una cuenta para ingresar al catálogo y guardar mangas en favoritos.
         </p>
 
         {error && (
@@ -77,7 +88,24 @@ function Login() {
           </p>
         )}
 
+        {message && (
+          <p className="success">
+            {message}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit}>
+          <label htmlFor="name">
+            Nombre
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={event => setName(event.target.value)}
+          />
+
           <label htmlFor="username">
             Usuario
           </label>
@@ -101,16 +129,16 @@ function Login() {
           />
 
           <button type="submit">
-            Entrar
+            Registrarse
           </button>
         </form>
 
         <p>
-          ¿No tienes cuenta? <Link to="/register">Crear cuenta</Link>
+          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
         </p>
       </section>
     </main>
   )
 }
 
-export default Login
+export default Register

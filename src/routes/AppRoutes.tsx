@@ -12,6 +12,7 @@ import Unauthorized from '../pages/Unauthorized'
 import NotFound from '../pages/NotFound'
 import DetalleManga from '../pages/DetalleManga'
 import Favoritos from '../pages/Favoritos'
+import Register from '../pages/Register'
 
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
@@ -29,6 +30,16 @@ function AppRoutes() {
             element={
               <PublicRoute>
                 <Login />
+              </PublicRoute>
+            }
+          />
+
+           <Route
+
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
               </PublicRoute>
             }
           />
