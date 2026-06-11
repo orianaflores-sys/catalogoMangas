@@ -12,16 +12,30 @@ function NotFound() {
         />
       </Helmet>
 
-      <section className="hero">
-        <h1>404</h1>
+      <section className="not-found-card">
+        <div className="not-found-number">
+          404
+        </div>
+
+        <h1>Página no encontrada</h1>
 
         <p>
-          La página que buscas no existe.
+          La ruta que intentaste abrir no existe o fue escrita incorrectamente.
         </p>
 
-        <Link to="/">
-          Volver al inicio
-        </Link>
+        <p>
+          Puedes volver al inicio o ingresar al catálogo si ya iniciaste sesión.
+        </p>
+
+        <div className="not-found-actions">
+          <Link to="/">
+            Volver al inicio
+          </Link>
+
+          <Link to="/login">
+            Ir al login
+          </Link>
+        </div>
       </section>
     </main>
   )

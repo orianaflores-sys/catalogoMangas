@@ -561,3 +561,55 @@ td {
     grid-template-columns: 1fr;
   }
 }
+
+.not-found-card {
+  max-width: 720px;
+  margin: 50px auto;
+  background: #faf7f1;
+  border: 1px solid #d8cec1;
+  border-radius: 14px;
+  padding: 42px 30px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(73, 54, 40, 0.08);
+}
+
+.not-found-number {
+  font-size: 76px;
+  font-weight: 800;
+  color: #5b2c83;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.not-found-card h1 {
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.not-found-card p {
+  max-width: 520px;
+  margin: 8px auto;
+  color: #555;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.not-found-actions a {
+  background: #eee6f4;
+  color: #5b2c83;
+  border: 1px solid #d8c4e8;
+  padding: 9px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.not-found-actions a:hover {
+  background: #e3d5ef;
+  color: #442061;
+}
