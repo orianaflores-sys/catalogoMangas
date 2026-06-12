@@ -1,16 +1,31 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import MangaCard from '../components/MangaCard'
-import { getMangasFromApi, getLocalMangas } from '../services/mangaService'
+import {
+  getLocalMangas,
+  getMangasFromApi,
+  searchMangasFromApi
+} from '../services/mangaService'
 import type { Manga } from '../types/manga'
 
-type FilterType = 'Todos' | 'API' | 'Locales' | 'Acción' | 'Romance' | 'Terror' | 'Fantasía' | 'Comedia' | 'Drama'
+type FilterType =
+  | 'Todos'
+  | 'API'
+  | 'Locales'
+  | 'Acción'
+  | 'Romance'
+  | 'Terror'
+  | 'Fantasía'
+  | 'Comedia'
+  | 'Drama'
+
 function Catalogo() {
   const [apiMangas, setApiMangas] = useState<Manga[]>([])
   const [localMangas, setLocalMangas] = useState<Manga[]>([])
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterType>('Todos')
   const [loading, setLoading] = useState(true)
+  const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -18,8 +33,25 @@ function Catalogo() {
     setLocalMangas(getLocalMangas())
   }, [])
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (search.trim().length >= 3) {
+        searchMangas(search)
+      }
+
+      if (search.trim() === '') {
+        loadMangas()
+      }
+    }, 600)
+
+    return () => clearTimeout(timer)
+  }, [search])
+
   async function loadMangas() {
     try {
+      setLoading(true)
+      setError('')
+
       const data = await getMangasFromApi()
       setApiMangas(data)
     } catch {
@@ -29,31 +61,51 @@ function Catalogo() {
     }
   }
 
-  const allMangas = [...apiMangas, ...localMangas]
+  async function searchMangas(query: string) {
+    try {
+      setSearching(true)
+      setError('')
+
+      const data = await searchMangasFromApi(query)
+      setApiMangas(data)
+    } catch {
+      setError('No se pudo realizar la búsqueda en la API')
+    } finally {
+      setSearching(false)
+      setLoading(false)
+    }
+  }
+
   function matchGenre(mangaGenre: string, selectedFilter: FilterType) {
-  const genre = mangaGenre.toLowerCase()
+    const genre = mangaGenre.toLowerCase()
 
-  const genreMap = {
-    'Acción': ['acción', 'action'],
-    'Romance': ['romance'],
-    'Terror': ['terror', 'horror'],
-    'Fantasía': ['fantasía', 'fantasy'],
-    'Comedia': ['comedia', 'comedy'],
-    'Drama': ['drama']
+    const genreMap = {
+      Acción: ['acción', 'action'],
+      Romance: ['romance'],
+      Terror: ['terror', 'horror'],
+      Fantasía: ['fantasía', 'fantasy'],
+      Comedia: ['comedia', 'comedy'],
+      Drama: ['drama']
+    }
+
+    if (
+      selectedFilter === 'Todos' ||
+      selectedFilter === 'API' ||
+      selectedFilter === 'Locales'
+    ) {
+      return true
+    }
+
+    return genreMap[selectedFilter].some(item => genre.includes(item))
   }
 
-  if (selectedFilter === 'Todos' || selectedFilter === 'API' || selectedFilter === 'Locales') {
-    return true
-  }
-
-  return genreMap[selectedFilter].some(item => genre.includes(item))
-}
+  const allMangas = [...apiMangas, ...localMangas]
 
   const filteredMangas = allMangas.filter(manga => {
     const matchSearch =
       manga.title.toLowerCase().includes(search.toLowerCase()) ||
       manga.author.toLowerCase().includes(search.toLowerCase()) ||
-      matchGenre(manga.genre, filter)
+      manga.genre.toLowerCase().includes(search.toLowerCase())
 
     if (filter === 'Todos') {
       return matchSearch
@@ -112,6 +164,10 @@ function Catalogo() {
             value={search}
             onChange={event => setSearch(event.target.value)}
           />
+
+          <small className="search-help">
+            Escribe mínimo 3 letras para buscar en la API.
+          </small>
         </div>
 
         <div className="filter-buttons">
@@ -133,19 +189,25 @@ function Catalogo() {
         </p>
       )}
 
+      {searching && (
+        <p className="info-message">
+          Buscando en la API...
+        </p>
+      )}
+
       {error && (
         <p className="error">
           {error}
         </p>
       )}
 
-      {!loading && !error && filteredMangas.length === 0 && (
+      {!loading && !searching && !error && filteredMangas.length === 0 && (
         <p className="info-message">
           No se encontraron mangas o cómics.
         </p>
       )}
 
-      {!loading && !error && filteredMangas.length > 0 && (
+      {!loading && !searching && !error && filteredMangas.length > 0 && (
         <p className="results-count">
           Resultados encontrados: {filteredMangas.length}
         </p>

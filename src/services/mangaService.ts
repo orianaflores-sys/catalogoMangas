@@ -3,9 +3,27 @@ import type { Manga, MangaFormData } from '../types/manga'
 
 const API_URL = 'https://api.jikan.moe/v4/manga'
 const STORAGE_KEY = 'mangaverse_mangas'
+const FAVORITES_KEY = 'mangaverse_favorites'
 
 export async function getMangasFromApi(): Promise<Manga[]> {
   const response = await axios.get(`${API_URL}?limit=24&order_by=popularity`)
+
+  const mangas: Manga[] = response.data.data.map((item: any) => ({
+    id: item.mal_id,
+    title: item.title,
+    author: item.authors[0]?.name || 'Autor desconocido',
+    genre: item.genres[0]?.name || 'Sin género',
+    status: item.status || 'Sin estado',
+    chapters: item.chapters || 'No especificado',
+    image: item.images.jpg.large_image_url || item.images.jpg.image_url,
+    description: item.synopsis || 'Sin descripción disponible'
+  }))
+
+  return mangas
+}
+
+export async function searchMangasFromApi(query: string): Promise<Manga[]> {
+  const response = await axios.get(`${API_URL}?q=${query}&limit=12`)
 
   const mangas: Manga[] = response.data.data.map((item: any) => ({
     id: item.mal_id,
@@ -58,7 +76,7 @@ export function createManga(data: MangaFormData) {
 export function updateManga(id: number, data: MangaFormData) {
   const mangas = getLocalMangas()
 
-  const updatedMangas = mangas.map(manga => {
+  const updatedMangas: Manga[] = mangas.map(manga => {
     if (manga.id === id) {
       return {
         id,
@@ -84,8 +102,6 @@ export function deleteManga(id: number) {
 
   saveLocalMangas(updatedMangas)
 }
-
-const FAVORITES_KEY = 'mangaverse_favorites'
 
 export function getFavoriteMangas(): Manga[] {
   const favoritesStorage = localStorage.getItem(FAVORITES_KEY)
