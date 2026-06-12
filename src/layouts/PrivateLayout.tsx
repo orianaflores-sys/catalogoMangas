@@ -34,7 +34,8 @@ function PrivateLayout() {
       <Outlet />
 
       <footer className="footer">
-        <p>MangaVerse - Usuario: {user?.username}</p>
+        <p>MangaVerse - Proyecto Final Tecnologías Web II</p>
+        <p>Desarrollado por Oriana Flores Ballón</p>
       </footer>
     </>
   )

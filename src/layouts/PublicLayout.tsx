@@ -17,6 +17,7 @@ function PublicLayout() {
 
       <footer className="footer">
         <p>MangaVerse - Proyecto Final Tecnologías Web II</p>
+        <p>Desarrollado por Oriana Flores Ballón</p>
       </footer>
     </>
   )
