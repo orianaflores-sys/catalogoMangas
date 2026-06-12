@@ -4,16 +4,16 @@ import { Helmet } from 'react-helmet-async'
 import {
   addFavoriteManga,
   getLocalMangas,
-  getMangasFromApi,
+  getMangaByIdFromApi,
   isFavoriteManga
 } from '../services/mangaService'
 import type { Manga } from '../types/manga'
 
 function DetalleManga() {
   const { id } = useParams()
-
   const [manga, setManga] = useState<Manga | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -22,15 +22,23 @@ function DetalleManga() {
 
   async function loadManga() {
     try {
-      const apiMangas = await getMangasFromApi()
+      setLoading(true)
+      setError('')
+
+      const mangaId = Number(id)
+
       const localMangas = getLocalMangas()
-      const allMangas = [...apiMangas, ...localMangas]
+      const localManga = localMangas.find(item => item.id === mangaId)
 
-      const mangaFound = allMangas.find(item => item.id === Number(id))
-
-      if (mangaFound) {
-        setManga(mangaFound)
+      if (localManga) {
+        setManga(localManga)
+        return
       }
+
+      const apiManga = await getMangaByIdFromApi(mangaId)
+      setManga(apiManga)
+    } catch {
+      setError('No se pudo cargar el detalle del manga')
     } finally {
       setLoading(false)
     }
@@ -41,32 +49,36 @@ function DetalleManga() {
       return
     }
 
-    const added = addFavoriteManga(manga)
+    const success = addFavoriteManga(manga)
 
-    if (!added) {
+    if (!success) {
       setMessage('Este manga ya está en favoritos')
       return
     }
 
-    setMessage('Manga agregado a favoritos')
+    setMessage('Manga agregado a favoritos correctamente')
   }
 
   if (loading) {
     return (
       <main>
-        <p className="info-message">Cargando información...</p>
+        <p className="info-message">
+          Cargando detalle del manga...
+        </p>
       </main>
     )
   }
 
-  if (!manga) {
+  if (error || !manga) {
     return (
       <main>
-        <section className="page-header">
-          <h1>Manga no encontrado</h1>
-          <p>No se encontró información para este manga.</p>
-          <Link to="/catalogo">Volver al catálogo</Link>
-        </section>
+        <p className="error">
+          {error || 'No se encontró el manga'}
+        </p>
+
+        <Link className="back-link" to="/catalogo">
+          Volver al catálogo
+        </Link>
       </main>
     )
   }
@@ -77,7 +89,7 @@ function DetalleManga() {
         <title>{manga.title} | MangaVerse</title>
         <meta
           name="description"
-          content={`Detalle del manga ${manga.title} en MangaVerse.`}
+          content={`Detalle del manga ${manga.title} dentro del sistema MangaVerse.`}
         />
         <meta
           property="og:title"
@@ -97,12 +109,14 @@ function DetalleManga() {
           />
         </div>
 
-        <div className="detail-info">
-          <span className="genre-pill">
+        <div className="detail-content">
+          <span className="badge">
             {manga.genre}
           </span>
 
-          <h1>{manga.title}</h1>
+          <h1>
+            {manga.title}
+          </h1>
 
           <p>
             <strong>Autor:</strong> {manga.author}
@@ -130,22 +144,21 @@ function DetalleManga() {
             </p>
           )}
 
-         <div className="form-actions">
-                <button
-                    type="button"
-                    onClick={handleAddFavorite}
-                    disabled={isFavoriteManga(manga.id)}
-                >
-                    {isFavoriteManga(manga.id) ? 'Ya está en favoritos' : 'Agregar a favoritos'}
-                </button>
+          <button
+            type="button"
+            onClick={handleAddFavorite}
+            disabled={isFavoriteManga(manga.id)}
+          >
+            {isFavoriteManga(manga.id)
+              ? 'Ya está en favoritos'
+              : 'Agregar a favoritos'}
+          </button>
 
-                <Link
-                    className="back-link"
-                    to="/catalogo"
-                    >
-                    Volver al catálogo
-                </Link>
-            </div>
+          <br />
+
+          <Link className="back-link" to="/catalogo">
+            Volver al catálogo
+          </Link>
         </div>
       </section>
     </main>

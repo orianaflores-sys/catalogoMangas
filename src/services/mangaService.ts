@@ -39,6 +39,25 @@ export async function searchMangasFromApi(query: string): Promise<Manga[]> {
   return mangas
 }
 
+export async function getMangaByIdFromApi(id: number): Promise<Manga> {
+  const response = await axios.get(`${API_URL}/${id}`)
+
+  const item = response.data.data
+
+  const manga: Manga = {
+    id: item.mal_id,
+    title: item.title,
+    author: item.authors[0]?.name || 'Autor desconocido',
+    genre: item.genres[0]?.name || 'Sin género',
+    status: item.status || 'Sin estado',
+    chapters: item.chapters || 'No especificado',
+    image: item.images.jpg.large_image_url || item.images.jpg.image_url,
+    description: item.synopsis || 'Sin descripción disponible'
+  }
+
+  return manga
+}
+
 export function getLocalMangas(): Manga[] {
   const mangasStorage = localStorage.getItem(STORAGE_KEY)
 
